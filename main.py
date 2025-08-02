@@ -6,21 +6,27 @@ from LocalVPNExceptions import NoSuchDirectoryException, ServerConfigExistExcept
 
 
 class WireGuardServer:
+    # TODO: make config delete function
     """Utility for creating WireGuard connected configs"""
 
-    def __init__(self, path: str, ip: str, name: str, port: str):
+    def __init__(self, path: str, ip: str, name: str, port: str, clients: int):
+        # TODO: make program`s start setup less complicated
         self.current_client_ip = None
         self.current_client_public = self.current_client_private = None
         self.server_public = self.server_privet = None
 
+        self.server_config = ""
         self.path = path
         self.ip = ip
         self.clients = []
         self.port = port
         self.name = name
+        self.clients = clients
 
         self._check_exist_config()
         self._setup_server_config()
+        self.append_clients(self.clients)
+        self._create_server_config()
 
     def _check_exist_config(self):
         if os.path.exists(os.path.join(self.path, "Data", "Configurations", self.name + ".conf")):
@@ -35,10 +41,7 @@ class WireGuardServer:
         self.server_public, self.server_privet = self._get_keys()
         os.mkdir(os.path.join(self.path, "clients_keys", self.name))
         os.mkdir(f"./clients_configs/{self.name}")
-        with open(os.path.join(self.path, "Data", "Configurations", self.name + ".conf"), "w+",
-                  encoding="utf-16") as config_file:
-            config = self._server_config_text()
-            config_file.write(config)
+        self.server_config = self._server_config_text()
 
     def _gen_server_keys(self):
         command = f"cd \"{self.path}\" | wg.exe genkey | " \
@@ -61,6 +64,7 @@ class WireGuardServer:
         return public, private
 
     def _server_config_text(self):
+        # TODO: create templates for configs
         config = f"""[Interface]
 PrivateKey = {self.server_privet}
 Address = {self.ip}/24
@@ -69,10 +73,12 @@ ListenPort = {self.port}
 """
         return config
 
-    def create_client(self):
-        if self.server_public is None:
-            pass
-        current_client = self._check_last_client()
+    def append_clients(self, clients_count: int, last_client_id: int = 0):
+        # TODO: function to append clients later to config
+        for i in range(last_client_id, clients_count + last_client_id):
+            self._create_client(i)
+
+    def _create_client(self, current_client: int):
         command = f"cd \"{self.path}\" | wg.exe genkey | " \
                   f"Tee-Object -FilePath \"clients_keys/{self.name}/client{current_client}_privet.key\" | " \
                   f"wg.exe pubkey | " \
@@ -85,18 +91,14 @@ ListenPort = {self.port}
                 as client_config_file:
             client_config_file.write(client_config)
 
-        with open(os.path.join(self.path, "Data", "Configurations", self.name + ".conf"), mode="a",
-                  encoding="utf-16") as client_config_file:
-            client_config_file.write(server_config)
-
-    def _check_last_client(self):
-        return len(os.listdir(os.path.join(self.path, "clients_keys", self.name)))
+        self.server_config += server_config
 
     def _client_ip(self, client_id: int):
         current_client_ip = self.ip.split(".")
         return ".".join(current_client_ip[:-1]) + "." + str(int(current_client_ip[-1]) + client_id + 1)
 
     def _client_config_text(self):
+        # TODO: create templates for configs
         client_config = f"""[Interface]
 PrivateKey = {self.current_client_private}
 Address = {self.current_client_ip}/32
@@ -112,6 +114,11 @@ AllowedIPs = {self.current_client_ip}/32
 """
 
         return client_config, server_config
+
+    def _create_server_config(self):
+        with open(os.path.join(self.path, "Data", "Configurations", self.name + ".conf"), "w+",
+                  encoding="utf-16") as config_file:
+            config_file.write(self.server_config)
 
     @staticmethod
     def _execute_command(command):
@@ -129,7 +136,7 @@ def main() -> None:
         description="Creates a server and clients WireGuard configs",
         add_help=True
     )
-    parser.add_argument("--name", default="server_test", help="Server config name", type=str)
+    parser.add_argument("--name", default="server_TEsttS", help="Server config name", type=str)
     parser.add_argument("--path", default=r"C:\Program Files\WireGuard", help="Absolute path to WireGuard files",
                         type=str)
     parser.add_argument("--ip", default="10.0.0.1", help="Ip endpoint", type=str)
@@ -137,9 +144,7 @@ def main() -> None:
     parser.add_argument("-c", "--clients", default=1, help="Count of clients configs", type=int)
     args = parser.parse_args()
 
-    configs_create: WireGuardServer = WireGuardServer(args.path, args.ip, args.name, args.port)
-    for i in range(args.clients):
-        configs_create.create_client()
+    configs_create: WireGuardServer = WireGuardServer(args.path, args.ip, args.name, args.port, args.clients)
 
 
 if __name__ == "__main__":
