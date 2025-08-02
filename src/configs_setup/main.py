@@ -2,15 +2,16 @@ import argparse
 import os
 import subprocess
 
-from LocalVPNExceptions import NoSuchDirectoryException, ServerConfigExistException
+from configs_setup.LocalVPNExceptions import NoSuchDirectoryException, ServerConfigExistException
 
 
 class WireGuardServer:
+    VERSION = "v0.2.0"
     # TODO: make config delete function
     """Utility for creating WireGuard connected configs"""
 
-    def __init__(self, path: str, ip: str, name: str, port: str, clients: int):
-        # TODO: make program`s start setup less complicated
+    def __init__(self, path: str, ip: str, name: str, port: str):
+        # TODO: make program's start setup less complicated
         self.current_client_ip = None
         self.current_client_public = self.current_client_private = None
         self.server_public = self.server_privet = None
@@ -18,28 +19,25 @@ class WireGuardServer:
         self.server_config = ""
         self.path = path
         self.ip = ip
-        self.clients = []
         self.port = port
         self.name = name
-        self.clients = clients
 
         self._check_exist_config()
-        self._setup_server_config()
-        self.append_clients(self.clients)
-        self._create_server_config()
 
     def _check_exist_config(self):
         if os.path.exists(os.path.join(self.path, "Data", "Configurations", self.name + ".conf")):
             message = f"Server config '{self.name + '.conf'}' already exists. Choose another name or delete existing"
             raise ServerConfigExistException(message)
 
-    def _setup_server_config(self):
-        if not os.path.exists(self.path):
+    def setup_server_config(self):
+        if not os.path.exists(self.path) or os.path.isfile(os.path.join(self.path, "wg.exe")):
             message = f"No such WireGuard directory '{self.path}'"
             raise NoSuchDirectoryException(message)
         self._gen_server_keys()
         self.server_public, self.server_privet = self._get_keys()
         os.mkdir(os.path.join(self.path, "clients_keys", self.name))
+        if not os.path.exists("clients_configs"):
+            os.mkdir(f"./clients_configs/")
         os.mkdir(f"./clients_configs/{self.name}")
         self.server_config = self._server_config_text()
 
@@ -77,6 +75,7 @@ ListenPort = {self.port}
         # TODO: function to append clients later to config
         for i in range(last_client_id, clients_count + last_client_id):
             self._create_client(i)
+        self._create_server_config()
 
     def _create_client(self, current_client: int):
         command = f"cd \"{self.path}\" | wg.exe genkey | " \
@@ -144,7 +143,9 @@ def main() -> None:
     parser.add_argument("-c", "--clients", default=1, help="Count of clients configs", type=int)
     args = parser.parse_args()
 
-    configs_create: WireGuardServer = WireGuardServer(args.path, args.ip, args.name, args.port, args.clients)
+    configs_create: WireGuardServer = WireGuardServer(args.path, args.ip, args.name, args.port)
+    configs_create.setup_server_config()
+    configs_create.append_clients(args.clients)
 
 
 if __name__ == "__main__":
