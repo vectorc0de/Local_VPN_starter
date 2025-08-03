@@ -20,7 +20,7 @@ class TestWireGuardStarter:
 
     def test_v0_2_0(self):
         version = WireGuardServer.VERSION[1:].split(".")
-        if not (version[0] == "0" and version[1] == "2"):
+        if not (version[0] == "0" and version[1] == "3"):
             return None
         starter = WireGuardServer(path=self.PATH, ip="10.0.0.1", name="test0", port="10000")
         starter.setup_server_config()
