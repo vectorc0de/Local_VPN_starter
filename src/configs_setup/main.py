@@ -56,14 +56,15 @@ class WireGuardServer:
         self._execute_command(command)
 
     def _get_keys(self, client_id=None):
-        if client_id is None:            
+        if client_id is None:
             public = open(os.path.join(self.path, "server_keys", self.name + "_public.key")).read().split()[0]
-            private = open(os.path.join(self.path, "server_keys", self.name + "_privet.key")).read().split()[0]
+            private = open(os.path.join(self.path, "server_keys", self.name + "_privet.key"),
+                           encoding='utf-16').read().split()[0]
         else:
             public = open(os.path.join(self.path, "clients_keys", self.name,
-                                       f"client{client_id}_public.key")).read().split()[0]
+                                       f"client{client_id}_public.key"), encoding='utf-16').read().split()[0]
             private = open(os.path.join(self.path, "clients_keys", self.name,
-                                        f"client{client_id}_privet.key")).read().split()[0]
+                                        f"client{client_id}_privet.key"), encoding='utf-16').read().split()[0]
         return public, private
 
     def _server_config_text(self):
