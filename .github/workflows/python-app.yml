@@ -51,4 +51,4 @@ jobs:
         ls server_keys
     - name: Try script
       run: |
-        python ./src/configs_setup/main.py --path "." --name "test_test"
+        python ./src/configs_setup/main.py --path "./tests" --name "test_test"
