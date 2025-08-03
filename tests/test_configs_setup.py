@@ -6,7 +6,7 @@ from configs_setup.LocalVPNExceptions import *
 from configs_setup.main import WireGuardServer
 
 
-class ConfigTests:
+class TestWireGuardStarter:
     PATH: str = r"C:\Program Files\WireGuard"
 
     @staticmethod
