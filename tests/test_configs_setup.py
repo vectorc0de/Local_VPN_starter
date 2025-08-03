@@ -7,7 +7,7 @@ from configs_setup.main import WireGuardServer
 
 
 class TestWireGuardStarter:
-    PATH: str = ".\\WireGuard"
+    PATH: str = "tests\\WireGuard"
 
     @staticmethod
     def check_all_files(starter: WireGuardServer, clients_count) -> bool:
