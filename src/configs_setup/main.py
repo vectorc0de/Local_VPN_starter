@@ -49,9 +49,9 @@ class WireGuardServer:
         self.server_config = self._server_config_text()
 
     def _gen_server_keys(self):
-        command = f"cd \"{self.path}\" | wg.exe genkey | " \
+        command = f"cd \"{self.path}\" | ./wg.exe genkey | " \
                   f"Tee-Object \"server_keys\\{self.name + '_privet.key'}\" | " \
-                  f"wg.exe pubkey | " \
+                  f"./wg.exe pubkey | " \
                   f"Tee-Object \"server_keys\\{self.name + '_public.key'}\""
         self._execute_command(command)
 
