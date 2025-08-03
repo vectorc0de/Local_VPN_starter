@@ -40,4 +40,4 @@ jobs:
         pytest
     - name: Check paths
       run: |
-        ls tests/WireGuard
+        ls tests/WireGuard/server_keys
