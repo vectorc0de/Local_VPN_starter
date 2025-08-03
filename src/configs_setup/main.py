@@ -58,8 +58,7 @@ class WireGuardServer:
     def _get_keys(self, client_id=None):
         if client_id is None:
             public = open(os.path.join(self.path, "server_keys", self.name + "_public.key")).read().split()[0]
-            private = open(os.path.join(self.path, "server_keys", self.name + "_private.key"),
-                           encoding='utf-16').read().split()[0]
+            private = open(os.path.join(self.path, "server_keys", self.name + "_private.key")).read().split()[0]
         else:
             public = open(os.path.join(self.path, "clients_keys", self.name,
                                        f"client{client_id}_public.key"), encoding='utf-16').read().split()[0]
