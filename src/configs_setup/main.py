@@ -22,7 +22,13 @@ class WireGuardServer:
         self.port = port
         self.name = name
 
+        self._check_wg_exist()
         self._check_exist_config()
+
+    def _check_wg_exist(self):
+        if not os.path.exists(self.path) or not os.path.isfile(os.path.join(self.path, "wg.exe")):
+            message = f"No such WireGuard directory '{self.path}'"
+            raise NoSuchDirectoryException(message)
 
     def _check_exist_config(self):
         if os.path.exists(os.path.join(self.path, "Data", "Configurations", self.name + ".conf")):
@@ -30,9 +36,10 @@ class WireGuardServer:
             raise ServerConfigExistException(message)
 
     def setup_server_config(self):
-        if not os.path.exists(self.path) or os.path.isfile(os.path.join(self.path, "wg.exe")):
-            message = f"No such WireGuard directory '{self.path}'"
-            raise NoSuchDirectoryException(message)
+        if not os.path.exists(os.path.join(self.path, "server_keys")):
+            os.mkdir(os.path.join(self.path, "server_keys"))
+        if not os.path.exists(os.path.join(self.path, "clients_keys")):
+            os.mkdir(os.path.join(self.path, "clients_keys"))
         self._gen_server_keys()
         self.server_public, self.server_privet = self._get_keys()
         os.mkdir(os.path.join(self.path, "clients_keys", self.name))

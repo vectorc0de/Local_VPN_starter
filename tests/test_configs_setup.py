@@ -7,11 +7,11 @@ from configs_setup.main import WireGuardServer
 
 
 class TestWireGuardStarter:
-    PATH: str = r"./"
+    PATH: str = ".\\WireGuard"
 
     @staticmethod
     def check_all_files(starter: WireGuardServer, clients_count) -> bool:
-        clients = path.exists(path.join("clients_configs", starter.name, f"client{clients_count}.conf"))
+        clients = path.exists(path.join(".\\clients_configs", starter.name, f"client{clients_count - 1}.conf"))
         server = path.exists(path.join(starter.path, "Data", "Configurations", starter.name + ".conf")) or \
                  path.exists(path.join(starter.path, "Data", "Configurations", starter.name + ".conf.dpapi"))
         if clients and server:
@@ -29,4 +29,4 @@ class TestWireGuardStarter:
         with pytest.raises(ServerConfigExistException):
             assert WireGuardServer(path=self.PATH, ip="10.0.0.1", name="test0", port="10000")
         with pytest.raises(NoSuchDirectoryException):
-            assert WireGuardServer(path="./", ip="10.0.0.1", name="test0", port="10000")
+            assert WireGuardServer(path=".", ip="10.0.0.1", name="test0", port="10000")
