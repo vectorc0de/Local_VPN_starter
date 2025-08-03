@@ -44,15 +44,15 @@ class WireGuardServer:
         self.server_public, self.server_privet = self._get_keys()
         os.mkdir(os.path.join(self.path, "clients_keys", self.name))
         if not os.path.exists("clients_configs"):
-            os.mkdir("./clients_configs/")
-        os.mkdir(f"./clients_configs/{self.name}")
+            os.mkdir(".\\clients_configs\\")
+        os.mkdir(f".\\clients_configs\\{self.name}")
         self.server_config = self._server_config_text()
 
     def _gen_server_keys(self):
         command = f"cd \"{self.path}\" | wg.exe genkey | " \
-                  f"Tee-Object -FilePath \"server_keys/{self.name + '_privet.key'}\" | " \
+                  f"Tee-Object \"server_keys\\{self.name + '_privet.key'}\" | " \
                   f"wg.exe pubkey | " \
-                  f"Tee-Object -FilePath \"server_keys/{self.name + '_public.key'}\""
+                  f"Tee-Object \"server_keys\\{self.name + '_public.key'}\""
         self._execute_command(command)
 
     def _get_keys(self, client_id=None):
