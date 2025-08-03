@@ -30,6 +30,7 @@ jobs:
         pip install -r requirements_dev.txt
         Invoke-WebRequest -Uri "https://download.wireguard.com/windows-client/wireguard-installer.exe" -OutFile ".\wireguard-installer.exe"
         Start-Process -FilePath '.\wireguard-installer.exe'
+        pip install -e .
     - name: Lint with flake8
       run: |
         flake8 src
