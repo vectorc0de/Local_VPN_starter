@@ -133,6 +133,7 @@ AllowedIPs = {self.current_client_ip}/32
             capture_output=True,
             text=True,
         )
+        print(completed_process.stderr)
         return completed_process
 
 
