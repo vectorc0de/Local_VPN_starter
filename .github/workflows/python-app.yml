@@ -41,3 +41,11 @@ jobs:
     - name: Check paths
       run: |
         ls tests/WireGuard/server_keys
+    - name: Check WireGuard
+      run: |
+        cd tests/WireGuard
+        wg.exe
+        wg.exe genkey | Tee-Object server_keys/test0_private.key | wg.exe pubkey | Tee-Object server_keys/test0_public.key
+        ls server_keys
+    - name: Try script
+        python ../../src/configs_setup/main.py --path "." --name "test_test"
