@@ -44,7 +44,7 @@ jobs:
     - name: Check WireGuard
       run: |
         cd tests/WireGuard
-        wg.exe
+        ls .
         wg.exe genkey | Tee-Object server_keys/test0_private.key | wg.exe pubkey | Tee-Object server_keys/test0_public.key
         ls server_keys
     - name: Try script
