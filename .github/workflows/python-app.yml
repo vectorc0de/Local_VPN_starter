@@ -52,4 +52,5 @@ jobs:
     - name: Try script
       run: |
         # python ./src/configs_setup/main.py --path "./tests/WireGuard" --name "test_test"
-        cat ./tests/WireGuard\\server_keys\\test_test_public.key
+        ls ./tests/WireGuard\\server_keys
+        cat ./tests\\WireGuard\\server_keys\\test_test_public.key
