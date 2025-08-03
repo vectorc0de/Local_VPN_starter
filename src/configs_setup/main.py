@@ -64,7 +64,7 @@ class WireGuardServer:
             public = open(os.path.join(self.path, "clients_keys", self.name,
                                        f"client{client_id}_public.key"), encoding='utf-16').read().split()[0]
             private = open(os.path.join(self.path, "clients_keys", self.name,
-                                        f"client{client_id}_privet.key"), encoding='utf-16').read().split()[0]
+                                        f"client{client_id}_private.key"), encoding='utf-16').read().split()[0]
         return public, private
 
     def _server_config_text(self):
