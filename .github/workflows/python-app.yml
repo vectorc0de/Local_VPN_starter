@@ -52,4 +52,4 @@ jobs:
     - name: Try script
       run: |
         ls server_keys
-        # python ./src/configs_setup/main.py --path "./tests/WireGuard" --name "test_test"
+        # pyth0n ./src/configs_setup/main.py --path "./tests/WireGuard" --name "test_test"
