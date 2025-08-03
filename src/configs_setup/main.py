@@ -27,7 +27,7 @@ class WireGuardServer:
 
     def _check_wg_exist(self):
         if not os.path.exists(self.path) or not os.path.isfile(os.path.join(self.path, "wg.exe")):
-            message = f"No such WireGuard directory '{os.path.curdir}'"
+            message = f"No such WireGuard directory '{os.path.abspath('.')}'"
             raise NoSuchDirectoryException(message)
 
     def _check_exist_config(self):
