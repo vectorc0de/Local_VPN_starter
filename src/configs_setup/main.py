@@ -50,7 +50,7 @@ class WireGuardServer:
 
     def _gen_server_keys(self):
         command = f"cd \"{self.path}\" | .\\wg.exe genkey | " \
-                  f"Tee-Object \"server_keys\\{self.name + '_privet.key'}\" | " \
+                  f"Tee-Object \"server_keys\\{self.name + '_private.key'}\" | " \
                   f".\\wg.exe pubkey | " \
                   f"Tee-Object \"server_keys\\{self.name + '_public.key'}\""
         self._execute_command(command)
@@ -58,7 +58,7 @@ class WireGuardServer:
     def _get_keys(self, client_id=None):
         if client_id is None:
             public = open(os.path.join(self.path, "server_keys", self.name + "_public.key")).read().split()[0]
-            private = open(os.path.join(self.path, "server_keys", self.name + "_privet.key"),
+            private = open(os.path.join(self.path, "server_keys", self.name + "_private.key"),
                            encoding='utf-16').read().split()[0]
         else:
             public = open(os.path.join(self.path, "clients_keys", self.name,
@@ -85,7 +85,7 @@ ListenPort = {self.port}
 
     def _create_client(self, current_client: int):
         command = f"cd \"{self.path}\" | .\\wg.exe genkey | " \
-                  f"Tee-Object -FilePath \"clients_keys/{self.name}/client{current_client}_privet.key\" | " \
+                  f"Tee-Object -FilePath \"clients_keys/{self.name}/client{current_client}_private.key\" | " \
                   f".\\wg.exe pubkey | " \
                   f"Tee-Object -FilePath \"clients_keys/{self.name}/client{current_client}_public.key\""
         self._execute_command(command)
