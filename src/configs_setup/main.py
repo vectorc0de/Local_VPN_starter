@@ -37,7 +37,7 @@ class WireGuardServer:
         self.server_public, self.server_privet = self._get_keys()
         os.mkdir(os.path.join(self.path, "clients_keys", self.name))
         if not os.path.exists("clients_configs"):
-            os.mkdir(f"./clients_configs/")
+            os.mkdir("./clients_configs/")
         os.mkdir(f"./clients_configs/{self.name}")
         self.server_config = self._server_config_text()
 
